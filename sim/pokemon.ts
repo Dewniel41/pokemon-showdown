@@ -2277,4 +2277,28 @@ export class Pokemon {
 		(this as any).battle = null!;
 		(this as any).side = null!;
 	}
+
+	/*
+		Dewniel Section
+	*/
+
+	gainPotency(item: ID, amount: number) {
+		if (!this.volatiles[item]) {
+			this.addVolatile(item);
+		}
+		if (!this.volatiles[item].potency) {
+			this.volatiles[item].potency = amount;
+			return;
+		}
+		if (this.volatiles[item].potency === 20) {
+			return;
+		}
+
+		this.volatiles[item].potency += amount;
+
+		if (item === 'charge' && this.volatiles[item].potency > 20) {
+			this.volatiles[item].potency = 20;
+		}
+		return;
+	}
 }

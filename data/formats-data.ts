@@ -6250,4 +6250,20 @@ export const FormatsData: import('../sim/dex-species').SpeciesFormatsDataTable =
 		isNonstandard: "Custom",
 		tier: "Illegal",
 	},
+	oddisharizonia: {
+		tier: "LC",
+	},
+	gloomarizonia: {
+		tier: "NFE",
+	},
+	vileplumearizonia: {
+		tier: "OU",
+		doublesTier: "DOU",
+		natDexTier: "OU",
+	},
+	embossom: {
+		tier: "OU",
+		doublesTier: "DOU",
+		natDexTier: "OU",
+	},
 };

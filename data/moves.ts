@@ -21305,4 +21305,20 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		type: "Fire",
 		contestType: "Beautiful",
 	},
+	chargetest: {
+		num: -20,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Charge Test",
+		pp: 5,
+		priority: 1,
+		target: 'self',
+		flags: { snatch: 1, metronome: 1 },
+		type: "Normal",
+		onHit(target, source) {
+			source.gainPotency('chargepote' as ID, 3);
+			this.add('-start', source, `chargepote${source.volatiles['chargepote'].potency}`);
+		},
+	},
 };

@@ -96,6 +96,8 @@ export abstract class BasicEffect implements EffectData {
 	isNonstandard: Nonstandard | null;
 	/** The duration of the condition - only for pure conditions. */
 	duration?: number;
+	/** for effects that gain in value and have a max value */
+	maxPotency?: number;
 	/** Whether or not the condition is ignored by Baton Pass - only for pure conditions. */
 	noCopy: boolean;
 	/** Whether or not the condition affects fainted Pokemon. */
@@ -119,6 +121,7 @@ export abstract class BasicEffect implements EffectData {
 		this.desc = data.desc || '';
 		this.isNonstandard = data.isNonstandard || null;
 		this.duration = data.duration;
+		this.maxPotency = data.maxPotency;
 		this.noCopy = !!data.noCopy;
 		this.affectsFainted = !!data.affectsFainted;
 		this.status = data.status as ID || undefined;
