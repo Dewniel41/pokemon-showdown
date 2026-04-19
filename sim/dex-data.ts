@@ -96,6 +96,8 @@ export abstract class BasicEffect implements EffectData {
 	isNonstandard: Nonstandard | null;
 	/** The duration of the condition - only for pure conditions. */
 	duration?: number;
+	/** for effects that gain in value and have a max value */
+	maxPotency?: number;
 	/** Whether or not the condition is ignored by Baton Pass - only for pure conditions. */
 	noCopy: boolean;
 	/** Whether or not the condition affects fainted Pokemon. */
@@ -119,6 +121,7 @@ export abstract class BasicEffect implements EffectData {
 		this.desc = data.desc || '';
 		this.isNonstandard = data.isNonstandard || null;
 		this.duration = data.duration;
+		this.maxPotency = data.maxPotency;
 		this.noCopy = !!data.noCopy;
 		this.affectsFainted = !!data.affectsFainted;
 		this.status = data.status as ID || undefined;
@@ -172,13 +175,12 @@ export class DexNatures {
 		return this.getByID(toID(name));
 	}
 	getByID(id: ID): Nature {
-		if (id === '' || id === 'constructor') return EMPTY_NATURE;
+		if (id === '') return EMPTY_NATURE;
 		let nature = this.natureCache.get(id);
 		if (nature) return nature;
 
-		const alias = this.dex.getAlias(id);
-		if (alias) {
-			nature = this.get(alias);
+		if (this.dex.data.Aliases.hasOwnProperty(id)) {
+			nature = this.get(this.dex.data.Aliases[id]);
 			if (nature.exists) {
 				this.natureCache.set(id, nature);
 			}
@@ -293,7 +295,7 @@ export class DexTypes {
 	}
 
 	getByID(id: ID): TypeInfo {
-		if (id === '' || id === 'constructor') return EMPTY_TYPE_INFO;
+		if (id === '') return EMPTY_TYPE_INFO;
 		let type = this.typeCache.get(id);
 		if (type) return type;
 
@@ -316,8 +318,7 @@ export class DexTypes {
 		return this.namesCache;
 	}
 
-	isName(name: string | null | undefined): boolean {
-		if (!name) return false;
+	isName(name: string): boolean {
 		const id = name.toLowerCase();
 		const typeName = id.charAt(0).toUpperCase() + id.substr(1);
 		return name === typeName && this.dex.data.TypeChart.hasOwnProperty(id);
