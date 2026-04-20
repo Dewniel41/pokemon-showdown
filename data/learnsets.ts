@@ -315,6 +315,7 @@ export const Learnsets: import('../sim/dex-species').LearnsetDataTable = {
 			weatherball: ["9M", "8M"],
 			workup: ["8M", "7M"],
 			worryseed: ["9L44", "8L44", "7T", "7L39", "6T", "6L39", "5T", "5L39", "4T", "4L39"],
+			chargetest: ["9L1"],
 		},
 		eventData: [
 			{generation: 6, level: 100, isHidden: true, moves: ["solarbeam", "frenzyplant", "synthesis", "grasspledge"], pokeball: "cherishball"},
@@ -100413,8 +100414,11 @@ export const Learnsets: import('../sim/dex-species').LearnsetDataTable = {
 			{generation: 5, level: 47, moves: ["darkpulse", "flamethrower", "hyperbeam", "icebeam"]},
 		],
 	},
-
+	
+	//
 	// skinmon
+	//
+
 	oddisharizonia: {
 		learnset: {
 			mudslap: ["9L1", "9M"],
