@@ -965,5 +965,7 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 			pokemon.gainPotency('chargepote' as ID, -1);
 			this.add('-start', pokemon, `Charge: ${pokemon.volatiles['chargepote'].potency}`);
 		},
+		onResidualOrder: 5,
+		maxPotency: 20,
 	},
 };

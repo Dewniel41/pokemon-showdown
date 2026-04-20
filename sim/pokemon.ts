@@ -2296,8 +2296,8 @@ export class Pokemon {
 			this.removeVolatile(item);
 			return;
 		}
-		if (item === 'charge' && this.volatiles[item].potency > 20) {
-			this.volatiles[item].potency = 20;
+		if (item === 'charge' && this.volatiles[item].potency > this.volatiles[item].maxPotency) {
+			this.volatiles[item].potency = this.volatiles[item].maxPotency;
 		}
 		return;
 	}

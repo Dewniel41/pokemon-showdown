@@ -97,6 +97,7 @@ export abstract class BasicEffect implements EffectData {
 	/** The duration of the condition - only for pure conditions. */
 	duration?: number;
 	/** for effects that gain in value and have a max value */
+	potency?: number;
 	maxPotency?: number;
 	/** Whether or not the condition is ignored by Baton Pass - only for pure conditions. */
 	noCopy: boolean;
