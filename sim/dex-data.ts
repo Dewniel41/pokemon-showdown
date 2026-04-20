@@ -122,6 +122,7 @@ export abstract class BasicEffect implements EffectData {
 		this.desc = data.desc || '';
 		this.isNonstandard = data.isNonstandard || null;
 		this.duration = data.duration;
+		this.potency = data.potency;
 		this.maxPotency = data.maxPotency;
 		this.noCopy = !!data.noCopy;
 		this.affectsFainted = !!data.affectsFainted;
