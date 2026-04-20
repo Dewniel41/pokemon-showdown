@@ -953,4 +953,17 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 			return bp;
 		},
 	},
+
+	//
+	// skinmon
+	//
+
+	chargepote: {
+		name: 'Charge',
+		onResidual(pokemon) {
+			this.add('-end', pokemon, `Charge: ${pokemon.volatiles['chargepote'].potency}`);
+			pokemon.gainPotency('chargepote' as ID, -1);
+			this.add('-start', pokemon, `Charge: ${pokemon.volatiles['chargepote'].potency}`);
+		},
+	},
 };

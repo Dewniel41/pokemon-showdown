@@ -2290,12 +2290,12 @@ export class Pokemon {
 			this.volatiles[item].potency = amount;
 			return;
 		}
-		if (this.volatiles[item].potency === 20) {
-			return;
-		}
-
 		this.volatiles[item].potency += amount;
 
+		if (this.volatiles[item].potency === 0) {
+			this.removeVolatile(item);
+			return;
+		}
 		if (item === 'charge' && this.volatiles[item].potency > 20) {
 			this.volatiles[item].potency = 20;
 		}

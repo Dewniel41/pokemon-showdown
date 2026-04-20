@@ -21317,8 +21317,10 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		flags: { snatch: 1, metronome: 1 },
 		type: "Normal",
 		onHit(target, source) {
+			source.gainPotency('chargepote' as ID, 0);
+			this.add('-end', source, `Charge: ${source.volatiles['chargepote'].potency}`);
 			source.gainPotency('chargepote' as ID, 3);
-			this.add('-start', source, `chargepote${source.volatiles['chargepote'].potency}`);
+			this.add('-start', source, `Charge: ${source.volatiles['chargepote'].potency}`);
 		},
 	},
 };
