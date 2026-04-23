@@ -959,13 +959,65 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 	//
 
 	chargepote: {
-		name: 'Charge',
+		name: 'ChargePote',
 		onResidual(pokemon) {
-			this.add('-end', pokemon, `Charge: ${pokemon.volatiles['chargepote'].potency}`);
-			pokemon.gainPotency('chargepote' as ID, -1);
-			this.add('-start', pokemon, `Charge: ${pokemon.volatiles['chargepote'].potency}`);
+			this.gainPotency(pokemon, 'chargepote' as ID, -1);
 		},
 		onResidualOrder: 5,
+		maxPotency: 20,
+	},
+
+	rupturepote: {
+		name: 'RupturePote',
+		onDamagingHit(damage, target, source, move) {
+			this.damage(target.volatiles['rupturepote'].potency || 0, target);
+			console.log(`${target.name} took ${target.volatiles['rupturepote'].potency || 0} damage from RupturePote!`);
+		},
+		maxPotency: 99,
+	},
+
+	bleedpote: {
+		name: 'BleedPote',
+		onThrowMoveOut(source) {
+			this.damage(source.volatiles['bleedpote'].potency || 0, source);
+			console.log(`${source.name} took ${source.volatiles['bleedpote'].potency || 0} damage from BleedPote!`);
+		},
+		maxPotency: 99,
+	},
+
+	tremorpote: {
+		name: 'TremorPote',
+		onResidual(pokemon) {
+			this.gainPotency(pokemon, 'tremorpote' as ID, -1);
+		},
+		maxPotency: 99,
+	},
+
+	sinkingpote: {
+		name: 'SinkingPote',
+		onResidual(pokemon) {
+			let repeats = Math.floor((pokemon.volatiles['sinkingpote'].potency || 0) / 5);
+			if (repeats <= 0) return;
+			let boosts = [0, 0, 0, 0, 0];
+			for (let i = 0; i < repeats; i++) {
+				let random = this.random(0, 4);
+				boosts[random]--;
+			}
+			this.boost({ atk: boosts[0], def: boosts[1], spa: boosts[2], spd: boosts[3], spe: boosts[4] }, pokemon);
+		},
+		maxPotency: 99,
+	},
+
+	poisepote: {
+		name: 'Poisepote',
+		onSourceModifyCritRatio(relayVar, source, target, move) {
+			return relayVar + (Math.floor(source.volatiles['poisepote']?.potency / 4) || 0);
+		},
+		onResidual(pokemon) {
+			let halved = Math.floor((pokemon.volatiles['poisepote'].potency || 0) / 2);
+			if (halved <= 0) return;
+			this.gainPotency(pokemon, 'poisepote' as ID, -1 * halved);
+		},
 		maxPotency: 20,
 	},
 };

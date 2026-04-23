@@ -38,6 +38,11 @@ export interface EffectState {
 	[k: string]: any;
 }
 
+export interface PotentEffectState extends EffectState {
+	potency: number;
+	maxPotency?: number;
+}
+
 // Berries which restore PP/HP and thus inflict external staleness when given to an opponent as
 // there are very few non-malicious competitive reasons to do so
 export const RESTORATIVE_BERRIES = new Set([
@@ -90,7 +95,7 @@ export class Pokemon {
 
 	status: ID;
 	statusState: EffectState;
-	volatiles: { [id: string]: EffectState };
+	volatiles: { [id: string]: EffectState | PotentEffectState };
 	showCure?: boolean;
 
 	/**
@@ -2026,6 +2031,73 @@ export class Pokemon {
 		return true;
 	}
 
+	addPotentVolatile(
+		status: string | Condition, source: Pokemon | null = null, sourceEffect: Effect | null = null,
+		linkedStatus: string | Condition | null = null
+	): boolean | any {
+		let result;
+		status = this.battle.dex.conditions.get(status);
+		console.log(`Adding potent volatile ${status.name} to ${this.name}`);
+		if (!this.hp && !status.affectsFainted) return false;
+		if (linkedStatus && source && !source.hp) return false;
+		if (this.battle.event) {
+			if (!source) source = this.battle.event.source;
+			if (!sourceEffect) sourceEffect = this.battle.effect;
+		}
+		if (!source) source = this;
+
+		if (this.volatiles[status.id]) {
+			if (!status.onRestart) return false;
+			return this.battle.singleEvent('Restart', status, this.volatiles[status.id], this, source, sourceEffect);
+		}
+		if (!this.runStatusImmunity(status.id)) {
+			this.battle.debug('immune to volatile status');
+			if ((sourceEffect as Move)?.status) {
+				this.battle.add('-immune', this);
+			}
+			return false;
+		}
+		result = this.battle.runEvent('TryAddVolatile', this, source, sourceEffect, status);
+		if (!result) {
+			console.log("it goes here");
+			this.battle.debug('add volatile [' + status.id + '] interrupted');
+			return result;
+		}
+		this.volatiles[status.id] = this.battle.initPotentEffectState({ id: status.id, name: status.name, target: this });
+		if (source) {
+			this.volatiles[status.id].source = source;
+			this.volatiles[status.id].sourceSlot = source.getSlot();
+		}
+		if (sourceEffect) this.volatiles[status.id].sourceEffect = sourceEffect;
+		if (status.duration) this.volatiles[status.id].duration = status.duration;
+		this.volatiles[status.id].potency = 0;
+		if (status.maxPotency) this.volatiles[status.id].maxPotency = status.maxPotency;
+		if (status.durationCallback) {
+			this.volatiles[status.id].duration = status.durationCallback.call(this.battle, this, source, sourceEffect);
+		}
+		result = this.battle.singleEvent('Start', status, this.volatiles[status.id], this, source, sourceEffect);
+		if (!result) {
+			// cancel
+			delete this.volatiles[status.id];
+			return result;
+		}
+		if (linkedStatus && source) {
+			if (!source.volatiles[linkedStatus.toString()]) {
+				source.addPotentVolatile(linkedStatus, this, sourceEffect);
+				source.volatiles[linkedStatus.toString()].linkedPokemon = [this];
+				source.volatiles[linkedStatus.toString()].linkedStatus = status;
+			} else {
+				source.volatiles[linkedStatus.toString()].linkedPokemon.push(this);
+			}
+			this.volatiles[status.toString()].linkedPokemon = [source];
+			this.volatiles[status.toString()].linkedStatus = linkedStatus;
+		}
+		console.log(`Set potency of ${this.volatiles[status.id].name} to ${this.volatiles[status.id].potency}`);
+		console.log(`Max potency of ${this.volatiles[status.id].name} is ${this.volatiles[status.id].maxPotency}`);
+		console.log(status.id);
+		return true;
+	}
+
 	getVolatile(status: string | Effect) {
 		status = this.battle.dex.conditions.get(status) as Effect;
 		if (!this.volatiles[status.id]) return null;
@@ -2284,11 +2356,7 @@ export class Pokemon {
 
 	gainPotency(item: ID, amount: number) {
 		if (!this.volatiles[item]) {
-			this.addVolatile(item);
-		}
-		if (!this.volatiles[item].potency) {
-			this.volatiles[item].potency = amount;
-			return;
+			this.addPotentVolatile(item);
 		}
 		this.volatiles[item].potency += amount;
 
@@ -2296,8 +2364,10 @@ export class Pokemon {
 			this.removeVolatile(item);
 			return;
 		}
-		if (item === 'charge' && this.volatiles[item].potency > this.volatiles[item].maxPotency) {
-			this.volatiles[item].potency = this.volatiles[item].maxPotency;
+		if (this.volatiles[item].maxPotency) {
+			if (this.volatiles[item].potency > this.volatiles[item].maxPotency) {
+				this.volatiles[item].potency = this.volatiles[item].maxPotency;
+			}
 		}
 		return;
 	}

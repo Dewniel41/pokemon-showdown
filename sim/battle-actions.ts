@@ -489,6 +489,13 @@ export class BattleActions {
 		}
 		if (!tryMoveResult) {
 			move.mindBlownRecoil = false;
+			if (options !== undefined) {
+				if (options.target !== undefined) {
+					if (options.target !== pokemon) {
+						this.battle.runEvent('ThrowMoveOut', pokemon);
+					}
+				}
+			}
 			return tryMoveResult;
 		}
 
@@ -538,7 +545,6 @@ export class BattleActions {
 				}
 			}
 		}
-
 		return true;
 	}
 	/** NOTE: includes single-target moves */
@@ -972,6 +978,8 @@ export class BattleActions {
 				hit++; // report the correct number of hits for multihit moves
 				break;
 			}
+
+			this.battle.runEvent('ThrowMoveOut', pokemon);
 		}
 		// hit is 1 higher than the actual hit count
 		if (hit === 1) return damage.fill(false);

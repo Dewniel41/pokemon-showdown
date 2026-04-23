@@ -17,7 +17,7 @@
 import { Dex, toID } from './dex';
 import { Teams } from './teams';
 import { Field } from './field';
-import { Pokemon, type EffectState, RESTORATIVE_BERRIES } from './pokemon';
+import { Pokemon, type EffectState, RESTORATIVE_BERRIES, PotentEffectState } from './pokemon';
 import { PRNG, type PRNGSeed } from './prng';
 import { type MoveRequest, type ChoiceRequest, Side } from './side';
 import { State } from './state';
@@ -1626,6 +1626,7 @@ export class Battle {
 			if (pokemon.volatiles['dynamax']?.turns === 3) {
 				dynamaxEnding.push(pokemon);
 			}
+			this.runEvent('EndTurn', pokemon);
 		}
 		if (dynamaxEnding.length > 1) {
 			this.updateSpeed();
@@ -3352,6 +3353,18 @@ export class Battle {
 		return obj as EffectState;
 	}
 
+	initPotentEffectState(obj: Partial<PotentEffectState>, effectOrder?: number): PotentEffectState {
+		if (!obj.id) obj.id = '';
+		if (effectOrder !== undefined) {
+			obj.effectOrder = effectOrder;
+		} else if (obj.id && obj.target && (!(obj.target instanceof Pokemon) || obj.target.isActive)) {
+			obj.effectOrder = this.effectOrder++;
+		} else {
+			obj.effectOrder = 0;
+		}
+		return obj as PotentEffectState;
+	}
+
 	clearEffectState(state: EffectState) {
 		state.id = '';
 		for (const k in state) {
@@ -3386,5 +3399,42 @@ export class Battle {
 		this.queue = null!;
 		// in case the garbage collector really sucks, at least deallocate the log
 		(this as any).log = [];
+	}
+
+	gainPotency(pokemon: Pokemon, item: ID, potency: number) {
+		if (pokemon.volatiles[item as string] !== undefined) {
+			this.add('-end', pokemon, `$${pokemon.volatiles[item as string].name}: ${pokemon.volatiles[item as string].potency}`);
+		}
+		pokemon.gainPotency(item, potency);
+		if (pokemon.volatiles[item as string] === undefined) {
+			return;
+		}
+		this.add('-start', pokemon, `${pokemon.volatiles[item as string].name}: ${pokemon.volatiles[item as string].potency}`);
+	}
+
+	burstTremor(pokemon: Pokemon) {
+		if (pokemon.volatiles['tremorpote'] === undefined) { return; }
+		const tremorEffect = Math.floor(pokemon.volatiles['tremorpote'].potency / 5);
+		const movesPP = pokemon.moveSlots.map(moveSlot => moveSlot.pp).reduce((a, b) => a + b, 0);
+		if (tremorEffect <= 0) { return; }
+		if (tremorEffect >= movesPP) {
+			pokemon.moveSlots.forEach(move => { move.pp = 0; });
+			return;
+		}
+		let i = 0;
+		let moves = [0, 1, 2, 3];
+		while (i < tremorEffect) {
+			const randomMove = this.random(moves[0], moves[moves.length - 1]);
+			if (pokemon.moveSlots[randomMove].pp > 0) {
+				pokemon.moveSlots[randomMove].pp--;
+				if (pokemon.moveSlots[randomMove].pp === 0) {
+					moves.splice(randomMove, 1);
+				}
+				i++;
+			} else {
+				moves.splice(randomMove, 1);
+			}
+		}
+		this.gainPotency(pokemon, 'tremorpote' as ID, pokemon.volatiles['tremorpote'].potency * -1);
 	}
 }

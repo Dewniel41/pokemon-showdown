@@ -100586,4 +100586,9 @@ export const Learnsets: import('../sim/dex-species').LearnsetDataTable = {
 			flamethrower: ["9M"],
 		},
 	},
+	grock: {
+		learnset: {
+			chargetest: ["9L1"],
+		}
+	}
 };

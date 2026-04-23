@@ -21033,4 +21033,31 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		color: "Red",
 		evoItem: "Sun Stone",
 	},
+
+	grock: {
+		num: 2004,
+		name: "Grock",
+		types: ["Rock", "Psychic"],
+		baseStats: { hp: 83, atk: 74, def: 54, spa: 80, spd: 77, spe: 72 },
+		abilities: { 0: "Hats Off" },
+		heightm: 1.8,
+		weightkg: 150,
+		color: "Brown",
+		eggGroups: ["Undiscovered"],
+		otherFormes: ["Grock-HatsOff"],
+		formeOrder: ["Grock", "Grock-HatsOff"],
+	},
+
+	grockhatoff: {
+		num: 2004,
+		name: "Grock-HatsOff",
+		types: ["Grass", "Psychic"],
+		baseStats: { hp: 83, atk: 74, def: 54, spa: 80, spd: 77, spe: 72 },
+		abilities: { 0: "hats Off" },
+		heightm: 1.8,
+		weightkg: 150,
+		color: "Brown",
+		eggGroups: ["Undiscovered"],
+		battleOnly: "Grock",
+	},
 };

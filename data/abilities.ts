@@ -5664,4 +5664,28 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 		rating: 3,
 		num: -3,
 	},
+	hatsoff: {
+		name: "Hats Off",
+		onSwitchIn(pokemon) {
+			if ('hatoff'.includes(pokemon.species.id)) return;
+			this.add('-ability', pokemon, 'Hats Off');
+			pokemon.addVolatile('hatsoff');
+		},
+		onDamage(damage, target, source, effect) {
+			if (!(target.volatiles['hatsoff'])) return damage;
+			if (effect?.effectType === 'Move' && 'grock'.includes(target.species.id)) {
+				this.add('-activate', target, 'ability: Hats Off');
+				target.formeChange('Grock-HatsOff');
+				this.boost({ atk: 1, def: 0, spa: 1, spd: 0, spe: 1 }, target, target);
+				return Math.floor(damage * 0.5);
+			}
+			return damage;
+		},
+		onEndTurn(pokemon) {
+			if (pokemon.volatiles['hatsoff']) {
+				this.add('-end', pokemon, 'ability: Hats Off');
+				pokemon.removeVolatile('hatsoff');
+			}
+		},
+	},
 };

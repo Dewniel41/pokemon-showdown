@@ -21317,11 +21317,10 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		flags: { snatch: 1, metronome: 1 },
 		type: "Normal",
 		onHit(target, source) {
-			if ("chargepote" in source.volatiles) {
-				this.add('-end', source, `Charge: ${source.volatiles['chargepote'].potency}`);
+			this.gainPotency(source, 'tremorpote' as ID, 11);
+			if (source.volatiles['tremorpote'].potency >= 20) {
+				this.burstTremor(source);
 			}
-			source.gainPotency('chargepote' as ID, 3);
-			this.add('-start', source, `Charge: ${source.volatiles['chargepote'].potency}`);
 		},
 	},
 };
