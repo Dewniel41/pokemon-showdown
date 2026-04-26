@@ -3416,13 +3416,21 @@ export class Battle {
 		if (pokemon.volatiles['tremorpote'] === undefined) { return; }
 		const tremorEffect = Math.floor(pokemon.volatiles['tremorpote'].potency / 5);
 		const movesPP = pokemon.moveSlots.map(moveSlot => moveSlot.pp).reduce((a, b) => a + b, 0);
-		if (tremorEffect <= 0) { return; }
+		if (tremorEffect <= 0) {
+			this.gainPotency(pokemon, 'tremorpote' as ID, pokemon.volatiles['tremorpote'].potency * -1);
+			return;
+		}
 		if (tremorEffect >= movesPP) {
 			pokemon.moveSlots.forEach(move => { move.pp = 0; });
 			return;
 		}
 		let i = 0;
-		let moves = [0, 1, 2, 3];
+		let moves = [];
+		for (let j = 0; j < pokemon.moveSlots.length; j++) {
+			if (pokemon.moveSlots[j].pp > 0) {
+				moves.push(j);
+			}
+		}
 		while (i < tremorEffect) {
 			const randomMove = this.random(moves[0], moves[moves.length - 1]);
 			if (pokemon.moveSlots[randomMove].pp > 0) {

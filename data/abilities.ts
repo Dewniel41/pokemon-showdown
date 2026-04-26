@@ -1085,6 +1085,16 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 		rating: 4,
 		num: 70,
 	},
+	sunlight: {
+		onStart(source) {
+			if (source.species.id === 'groudon' && source.item === 'redorb') return;
+			this.field.setWeather('sunnyday');
+		},
+		flags: {},
+		name: "Sunlight",
+		rating: 4,
+		num: 70,
+	},
 	dryskin: {
 		onTryHit(target, source, move) {
 			if (target !== source && move.type === 'Water') {
@@ -5668,7 +5678,6 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 		name: "Hats Off",
 		onSwitchIn(pokemon) {
 			if ('hatoff'.includes(pokemon.species.id)) return;
-			this.add('-ability', pokemon, 'Hats Off');
 			pokemon.addVolatile('hatsoff');
 		},
 		onDamage(damage, target, source, effect) {
@@ -5677,13 +5686,12 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 				this.add('-activate', target, 'ability: Hats Off');
 				target.formeChange('Grock-HatsOff');
 				this.boost({ atk: 1, def: 0, spa: 1, spd: 0, spe: 1 }, target, target);
-				return Math.floor(damage * 0.5);
+				return (damage * 0.5);
 			}
 			return damage;
 		},
 		onEndTurn(pokemon) {
 			if (pokemon.volatiles['hatsoff']) {
-				this.add('-end', pokemon, 'ability: Hats Off');
 				pokemon.removeVolatile('hatsoff');
 			}
 		},
