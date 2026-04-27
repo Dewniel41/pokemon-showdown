@@ -21323,4 +21323,157 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 			}
 		},
 	},
+	rip: {
+		num: -21,
+		name: "Rip",
+		accuracy: 100,
+		basePower: 40,
+		category: "Physical",
+		pp: 20,
+		priority: 1,
+		flags: { contact: 1, protect: 1, mirror: 1, metronome: 1 },
+		target: "normal",
+		type: "Electric",
+		onHit(target, source) {
+			this.gainPotency(source, 'chargepote' as ID, 4);
+		},
+	},
+	leap: {
+		num: -22,
+		name: "Leap",
+		accuracy: 100,
+		basePower: 75,
+		category: "Physical",
+		pp: 10,
+		priority: 0,
+		flags: { contact: 1, protect: 1, mirror: 1, metronome: 1 },
+		target: "normal",
+		type: "Electric",
+		onHit(target, source) {
+			this.gainPotency(source, 'chargepote' as ID, 8);
+		},
+	},
+	ripspace: {
+		num: -23,
+		name: "Rip Space",
+		accuracy: 100,
+		basePower: 10,
+		category: "Physical",
+		pp: 5,
+		priority: 0,
+		flags: { contact: 1, protect: 1, mirror: 1, metronome: 1 },
+		target: "normal",
+		type: "Electric",
+		onModifyMove(move, pokemon, target) {
+			if (pokemon.volatiles['chargepote'] === undefined) { return; }
+			move.multihit = Math.floor(pokemon.volatiles['chargepote'].potency / 5);
+		},
+		basePowerCallback(pokemon, target, move) {
+			this.gainPotency(pokemon, 'chargepote' as ID, -5);
+			return 10 + ((move.hit - 1) * 20);
+		},
+	},
+	weightybash: {
+		num: -24,
+		name: "Weighty Bash",
+		accuracy: 100,
+		basePower: 60,
+		category: "Physical",
+		pp: 10,
+		priority: 0,
+		flags: { contact: 1, protect: 1, mirror: 1, metronome: 1 },
+		target: "normal",
+		type: "Fighting",
+		onHit(target, source) {
+			if (!(target.volatiles['bleedpote'] === undefined)) {
+				this.gainPotency(source, 'chargepote' as ID, 6);
+			}
+			this.gainPotency(target, 'bleedpote' as ID, 3);
+		},
+	},
+	energycycle: {
+		num: -25,
+		name: "Energy Cycle",
+		accuracy: 100,
+		basePower: 60,
+		category: "Physical",
+		pp: 10,
+		priority: 0,
+		flags: { contact: 1, protect: 1, mirror: 1, metronome: 1 },
+		target: "normal",
+		type: "Electric",
+		onHit(target, source) {
+			this.gainPotency(source, 'chargepote' as ID, 5);
+			this.gainPotency(target, 'rupturepote' as ID, 5);
+		},
+	},
+	mindstrike: {
+		num: -26,
+		name: "Mind Strike",
+		accuracy: 90,
+		basePower: 80,
+		category: "Special",
+		pp: 10,
+		priority: 0,
+		flags: { protect: 1, mirror: 1, metronome: 1 },
+		target: "normal",
+		type: "Psychic",
+		onHit(target, source) {
+			this.gainPotency(target, 'sinkingpote' as ID, 3);
+			this.gainPotency(source, 'chargepote' as ID, 6);
+		},
+	},
+	mindwhip: {
+		num: -27,
+		name: "Mind Whip",
+		accuracy: 100,
+		basePower: 35,
+		category: "Special",
+		pp: 5,
+		priority: 0,
+		flags: { protect: 1, mirror: 1, metronome: 1 },
+		multihit: 4,
+		target: "normal",
+		smartTarget: true,
+		type: "Psychic",
+		onModifyMove(move, pokemon, target) {
+			pokemon.addVolatile('mindwhip');
+			pokemon.volatiles['mindwhip'].potency = (pokemon.maxhp / 8);
+		},
+		basePowerCallback(pokemon, target, move) {
+			let onFieldPokemon = this.getAllActive(false);
+			onFieldPokemon = onFieldPokemon.filter((poke, index) => poke !== pokemon);
+			let flag = false;
+			if ((pokemon.volatiles['chargepote'] === undefined)) {
+				flag = true;
+			} else if (pokemon.volatiles['chargepote'].potency < 10) {
+				flag = true;
+			}
+			if (!flag) {
+				onFieldPokemon = onFieldPokemon.filter((poke, index) => !poke.isAlly(pokemon));
+				pokemon.volatiles['mindwhip'].potency = 0;
+			}
+			move.hitTargets = [onFieldPokemon[this.random(onFieldPokemon.length)]];
+			return move.basePower;
+		},
+		onHit(target, source) {
+			let flag = true;
+			if (source.volatiles['chargepote'] === undefined) {
+				flag = false;
+			} else if (source.volatiles['chargepote'].potency < 10) {
+				flag = false;
+			}
+			this.gainPotency(target, 'sinkingpote' as ID, flag ? 2 : 1);
+			if (!flag) {
+				this.damage(source.volatiles['mindwhip'].potency, source);
+			}
+		},
+		onAfterHit(target, source) {
+			source.removeVolatile('mindwhip');
+			if (source.volatiles['chargepote'] === undefined) { return; }
+			if (source.volatiles['chargepote'].potency < 10) { return; }
+			this.gainPotency(source, 'chargepote' as ID, -10);
+		},
+	},
+
 };

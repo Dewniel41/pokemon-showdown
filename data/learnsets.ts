@@ -100589,6 +100589,10 @@ export const Learnsets: import('../sim/dex-species').LearnsetDataTable = {
 	grock: {
 		learnset: {
 			chargetest: ["9L1"],
+			mindwhip: ["9L1"],
+			leap: ["9L1"],
+			ripspace: ["9L1"],
+			weightybash: ["9L1"],
 		}
 	}
 };
