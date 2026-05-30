@@ -21351,7 +21351,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 	},
 	bearfive: {
 		num: 2030,
-		name: "Bear 5",
+		name: "Bear Five",
 		types: ["Dark"],
 		baseStats: { hp: 120, atk: 120, def: 80, spa: 50, spd: 80, spe: 150 },
 		abilities: { 0: "Defiant" },
