@@ -21384,10 +21384,10 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 	},
 	spiritphas: {
 		num: 2033,
-		name: "Spirit (Phasmophobia)",
+		name: "Spirit-Phasmophobia",
 		types: ["Ghost"],
 		baseStats: { hp: 71, atk: 90, def: 82, spa: 98, spd: 63, spe: 82 },
-		abilities: { 0: "Levitate" },
+		abilities: { 0: "Pressure", H: "Cursed Body" },
 		heightm: 1.8,
 		weightkg: 90,
 		color: "Gray",
