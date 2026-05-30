@@ -3402,6 +3402,7 @@ export class Battle {
 	}
 
 	gainPotency(pokemon: Pokemon, item: ID, potency: number) {
+		if (pokemon.hp <= 0) { return; }
 		if (pokemon.volatiles[item as string] !== undefined) {
 			this.add('-end', pokemon, `$${pokemon.volatiles[item as string].name}: ${pokemon.volatiles[item as string].potency}`);
 		}
@@ -3413,6 +3414,7 @@ export class Battle {
 	}
 
 	burstTremor(pokemon: Pokemon) {
+		if (pokemon.hp <= 0) { return; }
 		if (pokemon.volatiles['tremorpote'] === undefined) { return; }
 		const tremorEffect = Math.floor(pokemon.volatiles['tremorpote'].potency / 5);
 		const movesPP = pokemon.moveSlots.map(moveSlot => moveSlot.pp).reduce((a, b) => a + b, 0);

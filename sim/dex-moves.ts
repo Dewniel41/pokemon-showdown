@@ -99,6 +99,7 @@ export interface SecondaryEffect extends HitEffect {
 export interface MoveEventMethods {
 	basePowerCallback?: (this: Battle, pokemon: Pokemon, target: Pokemon, move: ActiveMove) => number | false | null;
 	/** Return true to stop the move from being used */
+	targetComplexity?: (this: Battle, pokemon: Pokemon) => Pokemon[];
 	beforeMoveCallback?: (this: Battle, pokemon: Pokemon, target: Pokemon | null, move: ActiveMove) => boolean | void;
 	beforeTurnCallback?: (this: Battle, pokemon: Pokemon, target: Pokemon) => void;
 	damageCallback?: (this: Battle, pokemon: Pokemon, target: Pokemon) => number | false;

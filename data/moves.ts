@@ -5016,7 +5016,7 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 	extremespeed: {
 		num: 245,
 		accuracy: 100,
-		basePower: 80,
+		basePower: 999,
 		category: "Physical",
 		name: "Extreme Speed",
 		pp: 5,
@@ -21350,7 +21350,7 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		target: "normal",
 		type: "Electric",
 		onHit(target, source) {
-			this.gainPotency(source, 'chargepote' as ID, 8);
+			this.gainPotency(source, 'chargepote' as ID, 20);
 		},
 	},
 	ripspace: {
@@ -21366,11 +21366,15 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		type: "Electric",
 		onModifyMove(move, pokemon, target) {
 			if (pokemon.volatiles['chargepote'] === undefined) { return; }
-			move.multihit = Math.floor(pokemon.volatiles['chargepote'].potency / 5);
+			move.multihit = this.clampIntRange(1 + Math.floor(pokemon.volatiles['chargepote'].potency / 4), 1, 5);
 		},
 		basePowerCallback(pokemon, target, move) {
-			this.gainPotency(pokemon, 'chargepote' as ID, -5);
 			return 10 + ((move.hit - 1) * 20);
+		},
+		onHit(target, source, move) {
+			if (move.hit > 1) {
+				this.gainPotency(source, 'chargepote' as ID, -4);
+			}
 		},
 	},
 	weightybash: {
@@ -21423,7 +21427,7 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 			this.gainPotency(source, 'chargepote' as ID, 6);
 		},
 	},
-	mindwhip: {
+	mindwhipmove: {
 		num: -27,
 		name: "Mind Whip",
 		accuracy: 100,
@@ -21431,49 +21435,57 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		category: "Special",
 		pp: 5,
 		priority: 0,
-		flags: { protect: 1, mirror: 1, metronome: 1 },
-		multihit: 4,
+		flags: { protect: 1, mirror: 1 },
 		target: "normal",
-		smartTarget: true,
 		type: "Psychic",
-		onModifyMove(move, pokemon, target) {
-			pokemon.addVolatile('mindwhip');
-			pokemon.volatiles['mindwhip'].potency = (pokemon.maxhp / 8);
-		},
-		basePowerCallback(pokemon, target, move) {
-			let onFieldPokemon = this.getAllActive(false);
-			onFieldPokemon = onFieldPokemon.filter((poke, index) => poke !== pokemon);
-			let flag = false;
-			if ((pokemon.volatiles['chargepote'] === undefined)) {
-				flag = true;
-			} else if (pokemon.volatiles['chargepote'].potency < 10) {
-				flag = true;
-			}
-			if (!flag) {
-				onFieldPokemon = onFieldPokemon.filter((poke, index) => !poke.isAlly(pokemon));
-				pokemon.volatiles['mindwhip'].potency = 0;
-			}
-			move.hitTargets = [onFieldPokemon[this.random(onFieldPokemon.length)]];
-			return move.basePower;
-		},
 		onHit(target, source) {
-			let flag = true;
-			if (source.volatiles['chargepote'] === undefined) {
-				flag = false;
-			} else if (source.volatiles['chargepote'].potency < 10) {
-				flag = false;
-			}
+			let flag = (source.volatiles['mindwhip'] === undefined);
 			this.gainPotency(target, 'sinkingpote' as ID, flag ? 2 : 1);
 			if (!flag) {
 				this.damage(source.volatiles['mindwhip'].potency, source);
 			}
 		},
-		onAfterHit(target, source) {
+	},
+	mindwhip: {
+		num: -27,
+		name: "Mind Whip",
+		accuracy: true,
+		basePower: 0,
+		category: "Special",
+		pp: 5,
+		priority: 0,
+		flags: { metronome: 1 },
+		target: "self",
+		type: "Psychic",
+		onAfterMove(target, source) {
 			source.removeVolatile('mindwhip');
-			if (source.volatiles['chargepote'] === undefined) { return; }
-			if (source.volatiles['chargepote'].potency < 10) { return; }
-			this.gainPotency(source, 'chargepote' as ID, -10);
+			let flag = (source.volatiles['chargepote'] === undefined);
+			if (flag) { return; }
+			if (source.volatiles['chargepote'].potency < 12) {
+				this.gainPotency(source, 'chargepote' as ID, -1 * source.volatiles['chargepote'].potency);
+			}
+			this.gainPotency(source, 'chargepote' as ID, -12);
+		},
+		onHit(target, source, move) {
+			for (let i = 0; i < 4; i++) {
+				let targets = this.getAllActive(false).filter(poke => poke !== source);
+				let flag = false;
+				if (source.volatiles['chargepote'] === undefined) {
+					flag = true;
+				} else if (source.volatiles['chargepote'].potency < 12) {
+					flag = true;
+				}
+				if (!flag) {
+					targets = targets.filter(poke => !poke.isAlly(source));
+				} else {
+					source.addVolatile('mindwhip');
+					source.volatiles['mindwhip'].potency = (source.maxhp / 8);
+				}
+				if (!targets.length) {
+					return;
+				}
+				this.actions.useMove('mindwhipmove', source, { target: this.sample(targets) });
+			}
 		},
 	},
-
 };

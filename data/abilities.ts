@@ -5696,4 +5696,27 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 			}
 		},
 	},
+	asshole: {
+		onStart(pokemon) {
+			pokemon.removeVolatile('truant');
+			if (pokemon.activeTurns && (pokemon.moveThisTurnResult !== undefined || !this.queue.willMove(pokemon))) {
+				pokemon.addVolatile('truant');
+			}
+		},
+		onBeforeMovePriority: 9,
+		onBeforeMove(pokemon) {
+			if (pokemon.removeVolatile('truant')) {
+				this.add('cant', pokemon, 'ability: Truant');
+				return false;
+			}
+			pokemon.addVolatile('truant');
+		},
+		onDamage(damage, target, source, effect) {
+			source.setAbility('Truant');
+		},
+		condition: {},
+		flags: {},
+		name: "Asshole",
+		rating: -1,
+	},
 };

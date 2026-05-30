@@ -96,6 +96,7 @@ export class Pokemon {
 	status: ID;
 	statusState: EffectState;
 	volatiles: { [id: string]: EffectState | PotentEffectState };
+	permavolatiles: { [id: string]: EffectState | PotentEffectState };
 	showCure?: boolean;
 
 	/**
@@ -384,6 +385,7 @@ export class Pokemon {
 		this.status = '';
 		this.statusState = this.battle.initEffectState({});
 		this.volatiles = {};
+		this.permavolatiles = {};
 		this.showCure = undefined;
 
 		if (!this.set.evs) {
@@ -2037,7 +2039,6 @@ export class Pokemon {
 	): boolean | any {
 		let result;
 		status = this.battle.dex.conditions.get(status);
-		console.log(`Adding potent volatile ${status.name} to ${this.name}`);
 		if (!this.hp && !status.affectsFainted) return false;
 		if (linkedStatus && source && !source.hp) return false;
 		if (this.battle.event) {
@@ -2059,7 +2060,6 @@ export class Pokemon {
 		}
 		result = this.battle.runEvent('TryAddVolatile', this, source, sourceEffect, status);
 		if (!result) {
-			console.log("it goes here");
 			this.battle.debug('add volatile [' + status.id + '] interrupted');
 			return result;
 		}
@@ -2092,9 +2092,6 @@ export class Pokemon {
 			this.volatiles[status.toString()].linkedPokemon = [source];
 			this.volatiles[status.toString()].linkedStatus = linkedStatus;
 		}
-		console.log(`Set potency of ${this.volatiles[status.id].name} to ${this.volatiles[status.id].potency}`);
-		console.log(`Max potency of ${this.volatiles[status.id].name} is ${this.volatiles[status.id].maxPotency}`);
-		console.log(status.id);
 		return true;
 	}
 
