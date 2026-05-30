@@ -6376,7 +6376,7 @@ export const FormatsData: import('../sim/dex-species').SpeciesFormatsDataTable =
 		doublesTier: "DOU",
 		natDexTier: "OU",
 	},
-	spiritphas: {
+	spiritphasmophobia: {
 		tier: "OU",
 		doublesTier: "DOU",
 		natDexTier: "OU",

@@ -101664,7 +101664,7 @@ export const Learnsets: import('../sim/dex-species').LearnsetDataTable = {
 			xscissor: ["8M", "7M"],
 		},
 	},
-	spiritphas: {
+	spiritphasmophobia: {
 		learnset: {
 			allyswitch: ["8M", "7T"],
 			astonish: ["9L1", "8L1"],

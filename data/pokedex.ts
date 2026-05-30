@@ -21382,9 +21382,9 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		color: "Green",
 		eggGroups: ["Undiscovered"],
 	},
-	spiritphas: {
+	spiritphasmophobia: {
 		num: 2033,
-		name: "Spirit-Phasmophobia",
+		name: "Spirit Phasmophobia",
 		types: ["Ghost"],
 		baseStats: { hp: 71, atk: 90, def: 82, spa: 98, spd: 63, spe: 82 },
 		abilities: { 0: "Pressure", H: "Cursed Body" },
