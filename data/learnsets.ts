@@ -100941,7 +100941,7 @@ export const Learnsets: import('../sim/dex-species').LearnsetDataTable = {
 	},
 	chomper: {
 		learnset: {
-			acidspray: ["7E"],
+			acidspray: ["9E"],
 			attract: ["7M", "6M", "5M", "4M"],
 			bind: ["7T", "7L1", "6T", "6L1", "5T", "5L1", "4L1"],
 			bite: ["7L7", "6L7", "5L7", "5D", "4L7"],
@@ -100962,7 +100962,7 @@ export const Learnsets: import('../sim/dex-species').LearnsetDataTable = {
 			frustration: ["7M", "6M", "5M", "4M"],
 			furycutter: ["4T"],
 			gastroacid: ["7T", "6T", "5T", "5D", "4T"],
-			gigadrain: ["7T", "7E", "6T", "6E", "5T", "5E", "4M"],
+			gigadrain: ["9T", "7E", "6T", "6E", "5T", "5E", "4M"],
 			gigaimpact: ["7M", "6M", "5M", "4M"],
 			grassknot: ["7M", "6M", "5M", "4M"],
 			grasswhistle: ["7E", "6E", "5E"],
@@ -100988,7 +100988,7 @@ export const Learnsets: import('../sim/dex-species').LearnsetDataTable = {
 			round: ["7M", "6M", "5M"],
 			secretpower: ["6M", "4M"],
 			seedbomb: ["7T", "6T", "5T", "4T"],
-			slam: ["7E", "6E", "5E", "4E"],
+			slam: ["9E", "6E", "5E", "4E"],
 			sleeppowder: ["7E", "6E", "5E", "4E"],
 			sleeptalk: ["7M", "6M", "5T", "4M"],
 			sludgebomb: ["7M", "6M", "5M", "4M"],
@@ -101002,14 +101002,14 @@ export const Learnsets: import('../sim/dex-species').LearnsetDataTable = {
 			swagger: ["7M", "6M", "5M", "4M"],
 			swallow: ["7L37", "6L37", "5L37", "4L31"],
 			sweetscent: ["7L17", "6L17", "5L17", "4L17"],
-			swordsdance: ["7M", "6M", "5M", "4M"],
+			swordsdance: ["9M", "6M", "5M", "4M"],
 			synthesis: ["7T", "7E", "6T", "6E", "5T", "5E", "4T", "4E"],
 			thief: ["7M", "6M", "5M", "4M"],
 			throatchop: ["7T"],
 			toxic: ["7M", "6M", "5M", "4M"],
-			vinewhip: ["7L11", "6L11", "5L11", "4L11"],
+			vinewhip: ["9L11", "6L11", "5L11", "4L11"],
 			worryseed: ["7T", "7E", "6T", "6E", "5T", "5E", "4T", "4E"],
-			wringout: ["7L47", "6L47", "5L47", "4L41"],
+			wringout: ["9L47", "6L47", "5L47", "4L41"],
 		},
 	},
 	flagzombie: {
@@ -101664,7 +101664,7 @@ export const Learnsets: import('../sim/dex-species').LearnsetDataTable = {
 			xscissor: ["8M", "7M"],
 		},
 	},
-	spirit: {
+	spiritphas: {
 		learnset: {
 			allyswitch: ["8M", "7T"],
 			astonish: ["9L1", "8L1"],

@@ -21382,7 +21382,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		color: "Green",
 		eggGroups: ["Undiscovered"],
 	},
-	spirit: {
+	spiritphas: {
 		num: 2033,
 		name: "Spirit (Phasmophobia)",
 		types: ["Ghost"],

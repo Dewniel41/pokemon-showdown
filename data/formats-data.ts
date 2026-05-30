@@ -6336,7 +6336,7 @@ export const FormatsData: import('../sim/dex-species').SpeciesFormatsDataTable =
 		doublesTier: "DOU",
 		natDexTier: "OU",
 	},
-	castlecrasher: {
+	castlecrashers: {
 		tier: "OU",
 		doublesTier: "DOU",
 		natDexTier: "OU",
@@ -6376,7 +6376,7 @@ export const FormatsData: import('../sim/dex-species').SpeciesFormatsDataTable =
 		doublesTier: "DOU",
 		natDexTier: "OU",
 	},
-	spirit: {
+	spiritphas: {
 		tier: "OU",
 		doublesTier: "DOU",
 		natDexTier: "OU",
